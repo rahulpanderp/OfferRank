@@ -1,0 +1,14 @@
+project:
+  name: "OfferRank"
+  package_name: "offerrank"
+  version: "0.1.0"
+  random_seed: 42
+
+problem:
+  type: "personalized_offer_ranking"
+  objective: "optimize_long_term_user_value"
+  prediction_unit: "user_offer_context"
+  primary_label: "conversion"
+  secondary_labels:
+    - "click"
+    - "impression"

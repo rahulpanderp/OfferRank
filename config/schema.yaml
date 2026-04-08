@@ -1,0 +1,106 @@
+entities:
+  users:
+    primary_key: user_id
+    description: "User profile and behavioral aggregates"
+  offers:
+    primary_key: offer_id
+    description: "Offer catalog with eligibility, economics, and metadata"
+  impressions:
+    primary_key: impression_id
+    description: "Logged ranking decision for a user request with shown offer and position"
+  clicks:
+    primary_key: click_id
+    description: "Click events tied to an impression"
+  conversions:
+    primary_key: conversion_id
+    description: "Downstream conversion outcome tied to an impression"
+
+tables:
+  users:
+    columns:
+      - user_id
+      - age_band
+      - city_tier
+      - occupation_group
+      - income_band
+      - credit_score_band
+      - risk_segment
+      - life_stage
+      - monthly_spend_band
+      - investment_pref
+      - insurance_need_score
+      - bnpl_affinity_score
+      - card_usage_score
+      - tenure_days
+      - days_since_last_login
+      - app_opens_30d
+      - clicks_30d
+      - conversions_90d
+      - churn_risk_score
+
+  offers:
+    columns:
+      - offer_id
+      - offer_type
+      - provider_id
+      - headline
+      - min_income_band
+      - max_risk_segment
+      - eligible_life_stages
+      - reward_type
+      - annual_fee
+      - apr_band
+      - cashback_rate_band
+      - max_credit_limit_band
+      - recommended_sip_band
+      - insurance_cover_band
+      - bnpl_tenure_months
+      - expected_margin
+      - risk_cost
+      - priority_score
+      - start_date
+      - end_date
+      - is_active
+
+  impressions:
+    columns:
+      - impression_id
+      - request_id
+      - user_id
+      - offer_id
+      - event_ts
+      - channel
+      - placement
+      - rank_position
+      - candidate_set_size
+      - policy_name
+      - policy_version
+      - score
+      - score_calibrated
+      - propensity
+      - was_shown
+      - is_eligible
+      - contextual_time_of_day
+      - contextual_day_of_week
+      - contextual_device_type
+      - contextual_session_depth
+
+  clicks:
+    columns:
+      - click_id
+      - impression_id
+      - user_id
+      - offer_id
+      - click_ts
+
+  conversions:
+    columns:
+      - conversion_id
+      - impression_id
+      - user_id
+      - offer_id
+      - conversion_ts
+      - conversion_type
+      - conversion_value
+      - realized_margin
+      - days_to_convert
