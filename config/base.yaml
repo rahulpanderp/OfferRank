@@ -12,7 +12,9 @@ problem:
   secondary_labels:
     - "click"
     - "impression"
+
 synthetic_data:
   seed: 42
   n_users: 10000
   n_offers: 120
+  output_dir: "data/raw"

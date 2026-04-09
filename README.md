@@ -71,3 +71,16 @@ The goal is to generate ranking logs that support:
 - learning-to-rank
 - offline evaluation
 - future counterfactual and experimentation analysis
+
+
+## Synthetic data generation
+
+The first implemented synthetic data milestone generates:
+- `users`
+- `offers`
+
+The generator is modular and seed-driven so data creation is reproducible and easy to extend in later milestones.
+
+### Current output
+- `data/raw/users.csv`
+- `data/raw/offers.csv`
