@@ -292,3 +292,159 @@ For Milestone 1, we assume:
 - local files and later SQLite/PostgreSQL are sufficient for development
 
 These assumptions keep the first version practical while preserving the structure needed for a production-style ranking story. [web:79][web:83]
+
+## Synthetic data generation assumptions
+
+### Initial simulation scale
+The first version of OfferRank will simulate:
+- 10,000 users
+- 120 offers
+- 150,000 ranking requests
+- an average of 12 eligible candidates per request
+- top 5 offers displayed per request
+
+This should produce approximately:
+- 750,000 impression rows
+- 30,000 to 60,000 click rows
+- 3,000 to 12,000 conversion rows
+
+### User population design
+Users are generated with correlated profile, financial, and engagement attributes rather than independent random columns.
+
+Key synthetic user dimensions:
+- `income_band`: low, lower_mid, upper_mid, high
+- `credit_score_band`: thin_file, fair, good, very_good
+- `risk_segment`: conservative, balanced, aggressive
+- `life_stage`: student, early_career, family, affluent, retiree
+- `engagement_segment`: dormant, casual, active, power
+- `financial_intent`: credit_builder, rewards_seeker, investor, protection_seeker, liquidity_seeker
+
+This creates realistic structure for personalization and downstream feature engineering.
+
+### Offer catalog design
+Offers are generated across five major offer families:
+- `card_upgrade`
+- `cashback_campaign`
+- `sip_recommendation`
+- `insurance_addon`
+- `bnpl_prompt`
+
+Recommended initial mix:
+- 30% card or cashback offers
+- 25% SIP offers
+- 20% insurance offers
+- 15% BNPL offers
+- 10% upgrade campaigns
+
+Each offer includes:
+- product metadata
+- business value fields such as expected margin
+- risk or cost fields
+- eligibility-related attributes
+
+### Eligibility logic
+Offer eligibility is modeled as a combination of hard rules and soft relevance.
+
+#### Hard eligibility
+Hard eligibility prevents clearly unsuitable offers from entering the candidate set.
+
+Examples:
+- premium card upgrades require stronger credit profiles
+- SIP offers require minimum income and investment suitability
+- insurance offers are more relevant for family or affluent life stages
+- BNPL prompts may be suppressed for high-risk users
+- inactive offers are never eligible
+
+#### Soft relevance
+Soft relevance influences ranking after eligibility is satisfied.
+
+Examples:
+- rewards seekers prefer cashback and card offers
+- investors prefer SIP offers
+- protection seekers prefer insurance
+- liquidity seekers prefer BNPL
+- active users are more likely to respond to cross-sell offers than dormant users
+
+### Request generation
+Synthetic requests represent moments when the ranking system is invoked.
+
+Each request includes context such as:
+- `request_id`
+- `user_id`
+- `channel`
+- `placement`
+- `time_of_day`
+- `day_of_week`
+- `device_type`
+- `session_depth`
+
+Initial channels:
+- `app_home`
+- `offers_hub`
+- `checkout_prompt`
+- `crm_push_landing`
+
+Initial placement mix:
+- app_home_banner: 35%
+- offers_hub_list: 30%
+- checkout_cross_sell: 20%
+- campaign_entry: 15%
+
+Request generation depends on engagement level so that active users generate more ranking opportunities than dormant users.
+
+### Logging policy
+Impressions are generated using a heuristic logging policy with small stochastic exploration.
+
+The logging policy:
+- scores eligible offers using user-offer fit and business value
+- ranks candidates for each request
+- displays the top 5 offers
+- injects limited randomness to reduce fully deterministic exposure patterns
+- logs `policy_name`, `policy_version`, `score`, and `propensity`
+
+This creates a more realistic logged dataset for later offline evaluation and policy analysis.
+
+### Click generation
+Clicks are generated as a probabilistic outcome of:
+- user-offer relevance
+- contextual fit
+- offer attractiveness
+- rank position
+- random noise
+
+The synthetic click model explicitly includes position bias, meaning higher-ranked offers are more likely to receive attention even when true relevance is the same.
+
+### Conversion generation
+Conversions are generated separately from clicks.
+
+Conversion likelihood depends on:
+- user-offer fit
+- friction of the offer
+- user intent
+- product type
+- risk considerations
+
+Examples:
+- cashback offers may click well but produce lower value
+- SIP and insurance offers may convert less often but create higher long-term value
+- BNPL may convert quickly but carry higher risk cost
+- premium card offers may have lower CTR but stronger realized margin
+
+### Initial label strategy
+The first version will support:
+- binary click label
+- binary conversion label
+- continuous realized margin label
+
+A later milestone can define graded relevance labels such as:
+- 0 = no click
+- 1 = click only
+- 2 = conversion with low value
+- 3 = conversion with high value
+
+### Design philosophy
+The synthetic data is intentionally designed to be:
+- realistic enough for product and ML system storytelling
+- structured enough for feature engineering and ranking evaluation
+- simple enough for local iteration
+- extensible enough for future counterfactual or bandit experiments

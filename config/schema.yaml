@@ -1,106 +1,201 @@
+version: "0.1"
+dataset_name: "offerrank"
+
 entities:
   users:
-    primary_key: user_id
-    description: "User profile and behavioral aggregates"
+    description: "User profile and behavioral aggregates used for personalization."
+    primary_key: "user_id"
+    columns:
+      - name: "user_id"
+        dtype: "string"
+        required: true
+        description: "Unique user identifier."
+      - name: "age_band"
+        dtype: "string"
+        required: true
+        description: "Age bucket of the user."
+      - name: "income_band"
+        dtype: "string"
+        required: true
+        description: "Income bucket used for eligibility and relevance."
+      - name: "credit_score_band"
+        dtype: "string"
+        required: true
+        description: "Credit quality segment."
+      - name: "risk_segment"
+        dtype: "string"
+        required: true
+        description: "User risk segment used for offer suitability."
+      - name: "life_stage"
+        dtype: "string"
+        required: true
+        description: "Life stage such as student, salaried, family, or retiree."
+      - name: "tenure_days"
+        dtype: "integer"
+        required: true
+        description: "Days since user joined the platform."
+      - name: "app_opens_30d"
+        dtype: "integer"
+        required: true
+        description: "Number of app opens in the last 30 days."
+      - name: "clicks_30d"
+        dtype: "integer"
+        required: true
+        description: "Number of offer clicks in the last 30 days."
+      - name: "conversions_90d"
+        dtype: "integer"
+        required: true
+        description: "Number of offer conversions in the last 90 days."
+
   offers:
-    primary_key: offer_id
-    description: "Offer catalog with eligibility, economics, and metadata"
-  impressions:
-    primary_key: impression_id
-    description: "Logged ranking decision for a user request with shown offer and position"
-  clicks:
-    primary_key: click_id
-    description: "Click events tied to an impression"
-  conversions:
-    primary_key: conversion_id
-    description: "Downstream conversion outcome tied to an impression"
-
-tables:
-  users:
+    description: "Offer catalog with product and business attributes."
+    primary_key: "offer_id"
     columns:
-      - user_id
-      - age_band
-      - city_tier
-      - occupation_group
-      - income_band
-      - credit_score_band
-      - risk_segment
-      - life_stage
-      - monthly_spend_band
-      - investment_pref
-      - insurance_need_score
-      - bnpl_affinity_score
-      - card_usage_score
-      - tenure_days
-      - days_since_last_login
-      - app_opens_30d
-      - clicks_30d
-      - conversions_90d
-      - churn_risk_score
-
-  offers:
-    columns:
-      - offer_id
-      - offer_type
-      - provider_id
-      - headline
-      - min_income_band
-      - max_risk_segment
-      - eligible_life_stages
-      - reward_type
-      - annual_fee
-      - apr_band
-      - cashback_rate_band
-      - max_credit_limit_band
-      - recommended_sip_band
-      - insurance_cover_band
-      - bnpl_tenure_months
-      - expected_margin
-      - risk_cost
-      - priority_score
-      - start_date
-      - end_date
-      - is_active
+      - name: "offer_id"
+        dtype: "string"
+        required: true
+        description: "Unique offer identifier."
+      - name: "offer_type"
+        dtype: "string"
+        required: true
+        description: "Type of offer such as card upgrade, SIP, insurance, cashback, or BNPL."
+      - name: "provider_id"
+        dtype: "string"
+        required: true
+        description: "Identifier of the provider or issuer."
+      - name: "annual_fee"
+        dtype: "float"
+        required: false
+        description: "Annual fee associated with the offer if applicable."
+      - name: "reward_type"
+        dtype: "string"
+        required: false
+        description: "Primary reward mechanism for the offer."
+      - name: "expected_margin"
+        dtype: "float"
+        required: true
+        description: "Expected business margin from a successful conversion."
+      - name: "risk_cost"
+        dtype: "float"
+        required: true
+        description: "Estimated business or underwriting cost."
+      - name: "is_active"
+        dtype: "boolean"
+        required: true
+        description: "Whether the offer is currently active."
 
   impressions:
+    description: "Exposure log capturing what offer was shown to which user in what context."
+    primary_key: "impression_id"
     columns:
-      - impression_id
-      - request_id
-      - user_id
-      - offer_id
-      - event_ts
-      - channel
-      - placement
-      - rank_position
-      - candidate_set_size
-      - policy_name
-      - policy_version
-      - score
-      - score_calibrated
-      - propensity
-      - was_shown
-      - is_eligible
-      - contextual_time_of_day
-      - contextual_day_of_week
-      - contextual_device_type
-      - contextual_session_depth
+      - name: "impression_id"
+        dtype: "string"
+        required: true
+        description: "Unique identifier for an impression event."
+      - name: "request_id"
+        dtype: "string"
+        required: true
+        description: "Identifier for the ranking request or session event."
+      - name: "user_id"
+        dtype: "string"
+        required: true
+        description: "User who received the impression."
+      - name: "offer_id"
+        dtype: "string"
+        required: true
+        description: "Offer shown in the impression."
+      - name: "event_ts"
+        dtype: "timestamp"
+        required: true
+        description: "Timestamp when the impression occurred."
+      - name: "channel"
+        dtype: "string"
+        required: true
+        description: "Serving channel such as app_home, campaign, or notifications."
+      - name: "placement"
+        dtype: "string"
+        required: true
+        description: "UI placement where the offer appeared."
+      - name: "rank_position"
+        dtype: "integer"
+        required: true
+        description: "Displayed position within the ranked list."
+      - name: "policy_name"
+        dtype: "string"
+        required: true
+        description: "Name of the serving policy."
+      - name: "policy_version"
+        dtype: "string"
+        required: true
+        description: "Version of the serving policy."
+      - name: "score"
+        dtype: "float"
+        required: true
+        description: "Raw ranking score assigned by the policy."
+      - name: "propensity"
+        dtype: "float"
+        required: false
+        description: "Probability of selecting this item under the logging policy."
 
   clicks:
+    description: "Short-term engagement events tied back to impressions."
+    primary_key: "click_id"
     columns:
-      - click_id
-      - impression_id
-      - user_id
-      - offer_id
-      - click_ts
+      - name: "click_id"
+        dtype: "string"
+        required: true
+        description: "Unique click event identifier."
+      - name: "impression_id"
+        dtype: "string"
+        required: true
+        description: "Impression that generated the click."
+      - name: "click_ts"
+        dtype: "timestamp"
+        required: true
+        description: "Timestamp when the click happened."
 
   conversions:
+    description: "Delayed business outcomes tied back to impressions."
+    primary_key: "conversion_id"
     columns:
-      - conversion_id
-      - impression_id
-      - user_id
-      - offer_id
-      - conversion_ts
-      - conversion_type
-      - conversion_value
-      - realized_margin
-      - days_to_convert
+      - name: "conversion_id"
+        dtype: "string"
+        required: true
+        description: "Unique conversion event identifier."
+      - name: "impression_id"
+        dtype: "string"
+        required: true
+        description: "Impression that led to the conversion."
+      - name: "conversion_ts"
+        dtype: "timestamp"
+        required: true
+        description: "Timestamp when the conversion happened."
+      - name: "conversion_value"
+        dtype: "float"
+        required: true
+        description: "Business value of the conversion."
+      - name: "realized_margin"
+        dtype: "float"
+        required: true
+        description: "Observed business margin after conversion."
+
+relationships:
+  - from_entity: "impressions"
+    from_column: "user_id"
+    to_entity: "users"
+    to_column: "user_id"
+
+  - from_entity: "impressions"
+    from_column: "offer_id"
+    to_entity: "offers"
+    to_column: "offer_id"
+
+  - from_entity: "clicks"
+    from_column: "impression_id"
+    to_entity: "impressions"
+    to_column: "impression_id"
+
+  - from_entity: "conversions"
+    from_column: "impression_id"
+    to_entity: "impressions"
+    to_column: "impression_id"

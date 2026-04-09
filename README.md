@@ -44,3 +44,30 @@ make verify
 - `docs/`: project design and ML lifecycle docs
 - `scripts/`: environment and verification utilities
 - `tests/`: basic validation tests
+## Synthetic data assumptions
+
+OfferRank uses synthetic but realistic user-offer interaction logs designed to mimic a production ranking environment.
+
+### Initial simulation scale
+- 10,000 users
+- 120 offers
+- 150,000 ranking requests
+- Average of 12 eligible candidates per request
+- Top 5 offers displayed per request
+
+### Synthetic world design
+The synthetic dataset is designed around:
+- user segments with correlated financial and behavioral traits
+- offer families with realistic business and eligibility constraints
+- request-time ranking contexts such as channel, placement, and device
+- impression logging with ranking score, policy version, and propensity
+- delayed clicks and conversions with business value signals
+
+### Why this matters
+The goal is not to generate random tabular data.  
+The goal is to generate ranking logs that support:
+- baseline ranking
+- pointwise models
+- learning-to-rank
+- offline evaluation
+- future counterfactual and experimentation analysis
