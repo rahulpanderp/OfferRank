@@ -13,3 +13,4 @@
 | 2026-04-09 | Use heuristic logging policy with light exploration | Fully deterministic logging policy | Reduces unrealistic exposure patterns and supports later policy evaluation ideas | Accepted |
 | 2026-04-09 | Simulate clicks and conversions separately | Single binary interaction label | Better reflects real funnel behavior and long-term value optimization | Accepted |
 | 2026-04-09 | Include explicit position bias in click generation | Assume clicks reflect pure relevance | More realistic logged ranking data and better future discussion of debiasing | Accepted |
+| 2026-04-09 | Implement synthetic data generation in stages, starting with users and offers | Generate all tables in one script | Staged generation is easier to validate, debug, and extend | Accepted |

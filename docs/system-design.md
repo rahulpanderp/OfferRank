@@ -34,3 +34,24 @@ This mirrors the structure of a real ranking system where:
 - candidate generation happens before ranking
 - logging policy affects what data is observed
 - downstream outcomes are delayed and incomplete
+
+## Synthetic pipeline staging
+
+The synthetic pipeline will be implemented in stages.
+
+### Stage 1
+Generate foundational entities:
+- users
+- offers
+
+### Stage 2
+Generate interaction context:
+- ranking requests
+- eligible candidate sets
+- impressions
+
+### Stage 3
+Generate outcomes:
+- clicks
+- conversions
+- realized business value
